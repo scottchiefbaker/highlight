@@ -30,6 +30,9 @@ GetOptions(
     "debug"         => \$debug,
 ) or die "unable to parse options, stopped";
 
+my @conf = process_config(\@raw_filters);
+@raw_filters = (@conf,@raw_filters);
+
 my (@colors,@filters) = ();
 if (@raw_filters) {
     # Build all the filter/color pairs
@@ -53,6 +56,10 @@ if (@raw_filters) {
             print "Filter: '$filter' = $color\n";
         }
     }
+
+	if ($debug) {
+		print "\n";
+	}
 }
 
 local $| = 1;
@@ -168,6 +175,55 @@ sub numeric_color {
     my $ret .= "\e[38;5;${c}m";
 
     return $ret;
+}
+
+sub trim {
+	my $s = shift();
+	if (!$s) { return ""; }
+	$s =~ s/^\s*|\s*$//g;
+
+	return $s;
+}
+
+sub process_config {
+	my $cfg_file = $ENV{"HOME"} . "/.highlight.config";
+	my @ret      = ();
+
+	if (-r $cfg_file) {
+		my @items = pfile($cfg_file);
+
+		foreach my $i (@items) {
+			$i = trim($i);
+
+			if ($i && $i !~ /^#/) {
+				#print "Added: $i\n";
+				push(@ret,$i);
+			} else {
+				#print "Skipped: $i\n";
+			}
+		}
+	}
+
+	return @ret;
+}
+
+sub pfile {
+	my $file = shift();
+	if (!-r $file) { return ''; } # Make sure the file is readable
+
+	my $ret = '';
+
+	open(INPUT,$file);
+	while (<INPUT>) {
+		$ret .= $_;
+	}
+	close INPUT;
+
+	if (wantarray) {
+		return split(/\n/,$ret);
+	} else {
+		return $ret;
+	}
 }
 
 # Copyright (c) 2009-2010 Dave Goodell
