@@ -23,6 +23,7 @@ my $default_color = $ENV{"HIGHLIGHT_COLOR"} || "bold red";
 my $color         = $default_color;
 my $ignore_case   = 0;
 my $debug         = 0;
+my $skip_config   = 0;
 my @raw_filters   = ();
 
 GetOptions(
@@ -31,10 +32,13 @@ GetOptions(
     "help"          => \&print_usage_and_exit,
     "filter=s"      => \@raw_filters,
     "debug"         => \$debug,
+    "skip-config"   => \$skip_config,
 ) or die "unable to parse options, stopped";
 
-my @conf = process_config(\@raw_filters);
-@raw_filters = (@conf,@raw_filters);
+if (!$skip_config) {
+    my @conf = process_config();
+    @raw_filters = (@conf,@raw_filters);
+}
 
 # @colors contains raw ANSI escape sequences
 my (@colors,@filters) = ();
@@ -53,6 +57,10 @@ if (@raw_filters) {
             $color  = $default_color;
         }
 
+        if ($debug) {
+            print "Filter: '$filter' = $color\n";
+        }
+
         # it's a numeric color
         if (looks_like_number($color)) {
             $color = numeric_color($color);
@@ -63,15 +71,11 @@ if (@raw_filters) {
 
         push(@colors,$color);
         push(@filters,$filter);
-
-        if ($debug) {
-            print "Filter: '$filter' = $color\n";
-        }
     }
 
-	if ($debug) {
-		print "\n";
-	}
+    if ($debug) {
+        print "\n";
+    }
 }
 
 local $| = 1;
@@ -180,52 +184,50 @@ sub numeric_color {
 }
 
 sub trim {
-	my $s = shift();
-	if (!$s) { return ""; }
-	$s =~ s/^\s*|\s*$//g;
+    my $s = shift();
+    if (!$s) { return ""; }
+    $s =~ s/^\s*|\s*$//g;
 
-	return $s;
+    return $s;
 }
 
 sub process_config {
-	my $cfg_file = $ENV{"HOME"} . "/.highlight.config";
-	my @ret      = ();
+    my $cfg_file = $ENV{"HOME"} . "/.highlight.config";
+    my @ret      = ();
 
-	if (-r $cfg_file) {
-		my @items = pfile($cfg_file);
+    if (-r $cfg_file) {
+        my @items = pfile($cfg_file);
 
-		foreach my $i (@items) {
-			$i = trim($i);
+        foreach my $i (@items) {
+            $i = trim($i);
 
-			if ($i && $i !~ /^#/) {
-				#print "Added: $i\n";
-				push(@ret,$i);
-			} else {
-				#print "Skipped: $i\n";
-			}
-		}
-	}
+            # If the line doesn't start with a comment
+            if ($i && $i !~ /^#/) {
+                push(@ret,$i);
+            }
+        }
+    }
 
-	return @ret;
+    return @ret;
 }
 
 sub pfile {
-	my $file = shift();
-	if (!-r $file) { return ''; } # Make sure the file is readable
+    my $file = shift();
+    if (!-r $file) { return ''; } # Make sure the file is readable
 
-	my $ret = '';
+    my $ret = '';
 
-	open(INPUT,$file);
-	while (<INPUT>) {
-		$ret .= $_;
-	}
-	close INPUT;
+    open(INPUT,$file);
+    while (<INPUT>) {
+        $ret .= $_;
+    }
+    close INPUT;
 
-	if (wantarray) {
-		return split(/\n/,$ret);
-	} else {
-		return $ret;
-	}
+    if (wantarray) {
+        return split(/\n/,$ret);
+    } else {
+        return $ret;
+    }
 }
 
 # Copyright (c) 2009-2010 Dave Goodell
