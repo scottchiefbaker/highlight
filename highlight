@@ -24,6 +24,7 @@ my $color         = $default_color;
 my $ignore_case   = 0;
 my $debug         = 0;
 my $skip_config   = 0;
+my $config_file   = '';
 my @raw_filters   = ();
 
 GetOptions(
@@ -33,10 +34,11 @@ GetOptions(
     "filter=s"      => \@raw_filters,
     "debug"         => \$debug,
     "skip-config"   => \$skip_config,
+    "config-file=s" => \$config_file,
 ) or die "unable to parse options, stopped";
 
 if (!$skip_config) {
-    my @conf = process_config();
+    my @conf = process_config($config_file);
     @raw_filters = (@conf,@raw_filters);
 }
 
@@ -192,8 +194,10 @@ sub trim {
 }
 
 sub process_config {
-    my $cfg_file = $ENV{"HOME"} . "/.highlight.config";
-    my @ret      = ();
+	my $cfg_file = trim(shift());
+    $cfg_file ||= $ENV{"HOME"} . "/.highlight.config";
+
+    my @ret = ();
 
     if (-r $cfg_file) {
         my @items = pfile($cfg_file);
