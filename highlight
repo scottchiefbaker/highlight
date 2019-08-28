@@ -40,6 +40,7 @@ if ($case_sensitive) {
 my @def_colors    = (33,11,9,47,214,99,15,51,198,94); # Blue, Yellow, Red, Green, Orange, Purple, White, LightBlue, Magenta, Brown
 my $def_color_num = 0;
 my $reset         = color('reset');
+my $bold          = color('bold');
 
 # Respect manual color overrides in ENV
 if ($ENV{"HIGHLIGHT_COLORS"}) {
@@ -91,7 +92,7 @@ if ($debug) {
 		my $color  = $colors[$i];
 		my $filter = $filters[$i];
 
-		my $c = color('bold') . color($color);
+		my $c = $bold . color($color);
 		printf("Filter: $c%${length}s$reset = '$color'\n", "'$filter'");
 	}
 
@@ -113,15 +114,13 @@ else              { $pattern = qr/$pattern/o; }
 
 LINE:
 while (my $line = <STDIN>) {
-	my $bold  = "\e[48;5;m";
-
 	if (@filters) {
 		# Loop through each filter
 		for (my $i = 0; $i < @filters; $i++) {
 			my $f = $filters[$i];
 			my $c = $colors[$i];
 
-			$c = color('bold') . color($c);
+			$c = $bold . color($c);
 
 			# If we're not FORCING ci or cs then we do SmartCase
 			if (!defined($case_sensitive) && !defined($case_insensitive)) {
@@ -200,21 +199,6 @@ sub is_numeric {
 	if ($f =~ /^(\d+\.?\d*|\.\d+)$/) { return 1; }
 
 	return 0;
-}
-
-# Set the foreground color
-sub numeric_color {
-	my $c    = shift();
-	my $bold = shift();
-
-	my $ret;
-	if ($bold) {
-		$ret .= "\e[1;38;5;${c}m";
-	} else {
-		$ret .= "\e[38;5;${c}m";
-	}
-
-	return $ret;
 }
 
 sub has_uppercase {
