@@ -242,8 +242,8 @@ sub color {
 	$str =~ s|([A-Za-z]+)|$color_map{$1} // $1|eg;
 
 	# Get foreground/background and any commands
-	my ($fc,$cmd) = $str =~ /(\d+)?_?(\w+)?/g;
-	my ($bc)      = $str =~ /on_?(\d+)/g;
+	my ($fc,$cmd) = $str =~ /^(\d{1,3})?_?(\w+)?$/g;
+	my ($bc)      = $str =~ /on_(\d{1,3})$/g;
 
 	# Some predefined commands
 	my %cmd_map = qw(bold 1 italic 3 underline 4 blink 5 inverse 7);
