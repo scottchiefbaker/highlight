@@ -23,14 +23,16 @@ my $case_sensitive   = undef;
 my $case_insensitive = undef;
 my $debug            = 0;
 my @raw_filters      = ();
+my $force            = 0;
 my $color;
 
 GetOptions(
 	"case_sensitive"   => \$case_sensitive,
 	"case_insensitive" => \$case_insensitive,
 	"help"             => \&print_usage_and_exit,
-	"filter=s"         => \@raw_filters,
+	"filter|f=s"       => \@raw_filters,
 	"debug"            => \$debug,
+	"force"            => \$force,
 ) or die "unable to parse options, stopped";
 
 if ($case_sensitive) {
@@ -201,7 +203,7 @@ sub color {
 	my $str = shift();
 
 	# If we're NOT connected to a an interactive terminal don't do color
-	if (-t STDOUT == 0) { return ''; }
+	if (!$force && -t STDOUT == 0) { return ''; }
 
 	# No string sent in, so we just reset
 	if (!length($str) || $str eq 'reset') { return "\e[0m"; }
