@@ -112,21 +112,20 @@ while (my $line = <STDIN>) {
 
 	# Loop through each filter
 	for (my $i = 0; $i < @filters; $i++) {
-		my $f = $filters[$i];
-		my $c = $colors[$i];
+		my $filter    = $filters[$i];
+		my $color_raw = $colors[$i];
+		my $color_str = $bold . color($color_raw);
 
-		$c = $bold . color($c);
-
-		# If we're not FORCING ci or cs then we do SmartCase
+		# If we're not FORCING CaseInsensitive or CaseSensitive then we do SmartCase
 		if (!defined($case_sensitive) && !defined($case_insensitive)) {
-			$ignore_case = int(!has_uppercase($f));
+			$ignore_case = int(!has_uppercase($filter));
 		}
 
 		# Search for the filter and wrap it in color
 		if ($ignore_case) {
-			$line =~ s/$f/$c$&$reset/ig;
+			$line =~ s/$filter/$color_str$&$reset/ig;
 		} else {
-			$line =~ s/$f/$c$&$reset/g;
+			$line =~ s/$filter/$color_str$&$reset/g;
 		}
 	}
 
