@@ -10,9 +10,11 @@
 
 use strict;
 use warnings;
-
-use Data::Dumper;
+use v5.16;
 use Getopt::Long;
+
+# Disable output buffering
+local $| = 1;
 
 my $VERSION = "1.5";
 
@@ -60,7 +62,7 @@ if (@raw_filters) {
 		if ($f =~ /(.+?),(.*)/) {
 			$color  = $1;
 			$filter = $2;
-			# It's just a bare word, so it gets the default color
+		# It's just a bare word, so it gets the default color
 		} else {
 			$filter = $f;
 
@@ -86,7 +88,7 @@ foreach my $filter (@ARGV) {
 
 if ($debug) {
 	my $length = longest_word(@filters);
-	$length += 2; # We add two because we '' the filter below and it makes the string longer
+	$length   += 2; # We add two because we '' the filter below and it makes the string longer
 
 	for (my $i = 0; $i < @filters; $i++) {
 		my $color  = $colors[$i];
@@ -99,64 +101,32 @@ if ($debug) {
 	print "\n";
 }
 
-# Disable output buffering
-local $| = 1;
-
 # Ensure we have at least ONE thing to filter on
 if (!@ARGV && !@filters) {
 	print_usage();
-	die "must pass a pattern, stopped";
+	die("At least one pattern required to match\n");
 }
 
-my $pattern = join '|', @ARGV;
-if ($ignore_case) { $pattern = qr/$pattern/oi; }
-else              { $pattern = qr/$pattern/o; }
-
-LINE:
+# Go line by line and apply each filter to it
 while (my $line = <STDIN>) {
-	if (@filters) {
-		# Loop through each filter
-		for (my $i = 0; $i < @filters; $i++) {
-			my $f = $filters[$i];
-			my $c = $colors[$i];
 
-			$c = $bold . color($c);
+	# Loop through each filter
+	for (my $i = 0; $i < @filters; $i++) {
+		my $f = $filters[$i];
+		my $c = $colors[$i];
 
-			# If we're not FORCING ci or cs then we do SmartCase
-			if (!defined($case_sensitive) && !defined($case_insensitive)) {
-				$ignore_case = int(!has_uppercase($f));
-			}
+		$c = $bold . color($c);
 
-			# Search for the filter and wrap it in color
-			if ($ignore_case) {
-				$line =~ s/$f/$c$&$reset/ig;
-			} else {
-				$line =~ s/$f/$c$&$reset/g;
-			}
+		# If we're not FORCING ci or cs then we do SmartCase
+		if (!defined($case_sensitive) && !defined($case_insensitive)) {
+			$ignore_case = int(!has_uppercase($f));
 		}
-	} else {
-		# sufficiently fancy values of $pattern might break this
-		while ($line =~ $pattern) {
-			# $` - everything before the match
-			# $& - the matched text
-			# $' - everything after the match
-			if ($& eq '') {
-				# If we hit zero-width and there's no "after", then we can't
-				# just advance a character (the zero-width might
-				# continuously match the empty string).  Advance to the next
-				# line.
-				next LINE unless $';
 
-				# zero-width match hit and we have an "after", advance a
-				# character (this could be very slow, but it should at least
-				# terminate eventually!)
-				print $` . substr($', 0, 1);
-				$line = substr($', 1, length($')-1);
-			}
-			else {
-				print $` . colored($&, $color);
-				$line = $';
-			}
+		# Search for the filter and wrap it in color
+		if ($ignore_case) {
+			$line =~ s/$f/$c$&$reset/ig;
+		} else {
+			$line =~ s/$f/$c$&$reset/g;
 		}
 	}
 
