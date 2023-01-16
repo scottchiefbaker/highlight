@@ -16,7 +16,7 @@ use Getopt::Long;
 # Disable output buffering
 local $| = 1;
 
-my $VERSION = "1.5";
+my $VERSION = "1.6";
 
 my $ignore_case      = 1;
 my $case_sensitive   = undef;
@@ -203,9 +203,32 @@ sub longest_word {
 sub colorize_line {
 	my ($line, $filter, $color) = @_;
 
-	$line =~ s/$filter/$color$&$reset/gx;
+	# This is an *eval* search/replace
+	#
+	# We look for matches in the line and pass the search/replace logic to
+	# a separate function to handle the colorization
+	$line =~ s/$filter/colorize_matches($&, $filter, $color, @{^CAPTURE})/eg;
 
 	return $line;
+}
+
+sub colorize_matches {
+	my ($str, $pattern, $color, @captures) = @_;
+
+	my $ret = $str;
+
+	# If there are @captures that means there are ( parens ) so we only
+	# colorize the words INSIDE the parens
+	if (@captures) {
+		foreach my $captured_text (@captures) {
+			$ret =~ s/$captured_text/$color$&$reset/ig;
+		}
+	# Otherwize it's a normal match and we colorize the entire match
+	} elsif ($str) {
+		$ret = $color . $str . $reset;
+	}
+
+	return $ret;
 }
 
 # String format: '115', '165_bold', '10_on_140', 'reset', 'on_173', 'red', 'white_on_blue'
