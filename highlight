@@ -24,6 +24,7 @@ my $case_insensitive = undef;
 my $debug            = 0;
 my @raw_filters      = ();
 my $force            = 0;
+my $full_match       = 0;
 my $color;
 
 GetOptions(
@@ -32,7 +33,10 @@ GetOptions(
 	"help"             => \&print_usage_and_exit,
 	"filter|f=s"       => \@raw_filters,
 	"debug"            => \$debug,
+	# Force colorization on at *ALL* times
 	"force"            => \$force,
+	# Highlight full matches not just captured parens
+	"full_matches"     => \$full_match,
 ) or die "unable to parse options, stopped";
 
 if ($case_sensitive) {
@@ -219,7 +223,7 @@ sub colorize_matches {
 
 	# If there are @captures that means there are ( parens ) so we only
 	# colorize the words INSIDE the parens
-	if (@captures) {
+	if (!$full_match && @captures) {
 		foreach my $captured_text (@captures) {
 			$ret =~ s/$captured_text/$color$&$reset/ig;
 		}
