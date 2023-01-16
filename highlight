@@ -125,10 +125,12 @@ while (my $line = <STDIN>) {
 
 		# Search for the filter and wrap it in color
 		if ($ignore_case) {
-			$line =~ s/$filter/$color_str$&$reset/ig;
+			$filter = qr/$filter/i;
 		} else {
-			$line =~ s/$filter/$color_str$&$reset/g;
+			$filter = qr/$filter/;
 		}
+
+		$line = colorize_line($line, $filter, $color_str);
 	}
 
 	print $line;
@@ -196,6 +198,14 @@ sub longest_word {
 	}
 
 	return $longest;
+}
+
+sub colorize_line {
+	my ($line, $filter, $color) = @_;
+
+	$line =~ s/$filter/$color$&$reset/gx;
+
+	return $line;
 }
 
 # String format: '115', '165_bold', '10_on_140', 'reset', 'on_173', 'red', 'white_on_blue'
