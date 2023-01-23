@@ -30,6 +30,17 @@ If your pattern begins with a dash, you can pass a `--` argument
 after any options and before your pattern to distinguish it from an
 option.
 
+### Params:
+
+| Option               | Description                                              |
+| -------------------- | -------------------------------------------------------- |
+| `--case_insensitive` | pattern matching is **not** case sensitive (default)     |
+| `--case_sensitive`   | pattern matching is case sensitive                       |
+| `--filter`           | a color and pattern pair (separated by a comma)          |
+| `--force`            | force coloring on, even when not connected to a terminal |
+| `--full_matches`     | colorize entire match, not just captured parens          |
+| `--help`             | show command usage                                       |
+
 ### Notes:
 This package also includes a bonus script `bleach_text` to strip out
 ANSI color escape sequences.
