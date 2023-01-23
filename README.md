@@ -39,7 +39,12 @@ option.
 | `--filter`           | a color and pattern pair (separated by a comma)          |
 | `--force`            | force coloring on, even when not connected to a terminal |
 | `--full_matches`     | colorize entire match, not just captured parens          |
+| `--file`             | read patterns from a file                                |
 | `--help`             | show command usage                                       |
+
+**Note:** Patterns read from a file are one per line. If patterns tab are separated,
+they use advanced `--filter COLOR,PATTERN` style syntax. Where the COLOR is the
+first column, one or more tabs, and then PATTERN.
 
 ### Notes:
 This package also includes a bonus script `bleach_text` to strip out
@@ -54,4 +59,6 @@ Filters can be assigned a **specific** color by using the ANSI number available 
 cat README.md | highlight colors? by 'pattern[\ds]?' text program with '\bhighlight\b'
 
 cat nagios.log | highlight --filter '11,\bWARNING\b' --filter '82,\bOK\b' --filter '196,\bCRITICAL\b'
+
+cat messages.log | highlight --file /tmp/patterns.txt
 ```

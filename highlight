@@ -166,6 +166,7 @@ $color
 --force             force coloring on, even when not connected to a terminal
 --full_matches      colorize entire match, not just captured parens
 --help              show command usage
+--file              read patterns from a file
 $reset
 This program takes text via standard input and outputs it with the given
 perlre(1) pattern(s) highlighted with various colors.  If no color option
@@ -303,6 +304,18 @@ sub file_get_contents {
 	}
 }
 
+# Read patterns from file... one entry per line
+# Advanced filters can be specified by using a tab separator
+#
+# Example of simple filters:
+# cat
+# dog
+# horse
+#
+# Example of complex filters (tab separated):
+# red		file: (\w+)
+# 17		foo.*bar
+# 99		pattern[s\d]
 sub read_patterns_from_file {
 	my ($file, $simple_filters, $adv_filters) = @_;
 
