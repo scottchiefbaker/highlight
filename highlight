@@ -25,6 +25,7 @@ my $debug            = 0;
 my @raw_filters      = ();
 my $force            = 0;
 my $full_match       = 0;
+my $file;
 my $color;
 
 GetOptions(
@@ -37,6 +38,7 @@ GetOptions(
 	"force"            => \$force,
 	# Highlight full matches not just captured parens
 	"full_matches"     => \$full_match,
+	"file=s"           => \$file,
 ) or die "unable to parse options, stopped";
 
 if ($case_sensitive) {
@@ -57,6 +59,10 @@ if ($ENV{"HIGHLIGHT_COLORS"}) {
 
 # @colors contains raw ANSI escape sequences
 my (@colors,@filters);
+
+if ($file) {
+	my $ok = read_patterns_from_file($file, \@ARGV, \@raw_filters);
+}
 
 # These are "--filter foo --filter bar" type of options
 if (@raw_filters) {
@@ -275,6 +281,79 @@ sub color {
 	if ($txt)         { $ret .= $txt . "\e[0m";   }
 
 	return $ret;
+}
+
+sub trim {
+	my ($s) = (@_, $_); # Passed in var, or default to $_
+	if (!defined($s) || length($s) == 0) { return ""; }
+	$s =~ s/^\s*//;
+	$s =~ s/\s*$//;
+
+	return $s;
+}
+
+sub file_get_contents {
+	open (my $fh, "<", $_[0]) or return undef;
+
+	if ($_[1]) { # Line mode
+		return my @lines  = readline($fh);
+	} else {     # String mode
+		local $/ = undef; # Input rec separator (slurp)
+		return my $ret  = readline($fh);
+	}
+}
+
+sub read_patterns_from_file {
+	my ($file, $simple_filters, $adv_filters) = @_;
+
+	if (!-r $file) {
+		return 0;
+	}
+
+	# Get the lines from the file
+	my @lines = file_get_contents($file, 1);
+	foreach (@lines) {
+		$_ = trim($_);
+	}
+
+	@lines = reverse(@lines);
+
+	foreach my $line (@lines) {
+		my @parts = split(/\t+/, $line, 2);
+
+		my $key = $parts[0];
+		my $val = $parts[1];
+
+		# Advanced filter
+		if ($key && $val) {
+			#print "Adding1: $key/$val\n";
+			unshift(@$adv_filters, "$key,$val");
+		# Simple filter
+		} elsif ($key) {
+			#print "Adding2: $key\n";
+			unshift(@$simple_filters, $key);
+		}
+	}
+
+	return 1;
+}
+
+# Debug print variable using either Data::Dump::Color (preferred) or Data::Dumper
+# Creates methods k() and kd() to print, and print & die respectively
+BEGIN {
+	if (eval { require Data::Dump::Color }) {
+		*k = sub { Data::Dump::Color::dd(@_) };
+	} else {
+		require Data::Dumper;
+		*k = sub { print Data::Dumper::Dumper(\@_) };
+	}
+
+	sub kd {
+		k(@_);
+
+		printf("Died at %2\$s line #%3\$s\n",caller());
+		exit(15);
+	}
 }
 
 # vim: tabstop=4 shiftwidth=4 autoindent softtabstop=4
