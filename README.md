@@ -32,9 +32,7 @@ option.
 
 ### Notes:
 This package also includes a bonus script `bleach_text` to strip out
-ANSI color escape sequences.  The highlight program unconditionally
-colors text, regardless of whether STDOUT is connected to a terminal or
-not.
+ANSI color escape sequences.
 
 ### Colors:
 
