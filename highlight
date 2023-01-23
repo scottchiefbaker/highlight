@@ -143,13 +143,24 @@ while (my $line = <STDIN>) {
 ##########################################################################
 
 sub print_usage {
+	my $ver_str = color('47', $VERSION);
+	my $color = color('230');
+	my $reset = color('reset');
+
     print <<EOT;
+This is highlight version $ver_str.
+
 Usage: $0 <PATTERN0> [PATTERN1...]
   or
 Usage: $0 [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
-
-This is highlight version $VERSION.
-
+$color
+--case_insensitive  pattern matching is not case sensitive (default)
+--case_sensitive    pattern matching is case sensitive
+--filter            a color and pattern pair (separated by a comma)
+--force             force coloring on, even when not connected to a terminal
+--full_matches      colorize entire match, not just captured parens
+--help              show command usage
+$reset
 This program takes text via standard input and outputs it with the given
 perlre(1) pattern(s) highlighted with various colors.  If no color option
 is specified, it defaults to a pre-selected array of colors. This program
@@ -237,7 +248,7 @@ sub colorize_matches {
 
 # String format: '115', '165_bold', '10_on_140', 'reset', 'on_173', 'red', 'white_on_blue'
 sub color {
-	my $str = shift();
+	my ($str, $txt) = @_;
 
 	# If we're NOT connected to a an interactive terminal don't do color
 	if (!$force && -t STDOUT == 0) { return ''; }
@@ -261,6 +272,7 @@ sub color {
 	if ($cmd_num)     { $ret .= "\e[${cmd_num}m"; }
 	if (defined($fc)) { $ret .= "\e[38;5;${fc}m"; }
 	if (defined($bc)) { $ret .= "\e[48;5;${bc}m"; }
+	if ($txt)         { $ret .= $txt . "\e[0m";   }
 
 	return $ret;
 }
