@@ -15,11 +15,12 @@ highlight [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
 ```
 
 This program takes text via STDIN and outputs it with the given
-[patterns](https://perldoc.perl.org/perlre.html) highlighted with various colors.  If no color option
-is specified, it defaults to a pre-selected array of colors.
+[patterns](https://perldoc.perl.org/perlre.html) highlighted with various colors.
+If no color option is specified, it defaults to a pre-selected array of colors.
 
 Passing `--case_sensitive` will enable case-sensitive matching. Otherwise
-Vim style smartcase matching will be implemented.
+case-insentive matching is used, unless there is a capital letter in your filter,
+in which case case-senstive is used (Vim smartcase).
 
 If your pattern begins with a dash, you can pass a `--` argument
 after any options and before your pattern to distinguish it from an
@@ -29,7 +30,7 @@ option.
 This package also includes a bonus script `bleach_text` to strip out
 ANSI color escape sequences.  The highlight program unconditionally
 colors text, regardless of whether STDOUT is connected to a terminal or
-not, so such a program is occasionally useful.
+not.
 
 ### Colors:
 
