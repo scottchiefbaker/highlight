@@ -18,6 +18,10 @@ This program takes text via STDIN and outputs it with the given
 [patterns](https://perldoc.perl.org/perlre.html) highlighted with various colors.
 If no color option is specified, it defaults to a pre-selected array of colors.
 
+If you filter contains capturing parens, *only* the captured text will be
+highlighted. If this is not the behavior you want you can use non-capturing
+parens, or use the `--full_matches` param.
+
 Passing `--case_sensitive` will enable case-sensitive matching. Otherwise
 case-insentive matching is used, unless there is a capital letter in your filter,
 in which case case-senstive is used (Vim smartcase).
