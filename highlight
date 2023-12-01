@@ -235,20 +235,13 @@ sub colorize_line {
 }
 
 sub get_captures {
-	my $str      = $&;
-	my @captures = ();
+    no strict 'refs';
 
-	# Build array using the offsets from @- and @+
-	for (my $i = 1; $i < @-; $i++) {
-		my $start = $-[$i];
-		my $end   = $+[$i];
-		my $len   = $end - $start;
+    my $last_idx = scalar(@-) - 1;
+    my @arr      = 1 .. $last_idx;
+    my @ret      = map { $$_; } @arr;
 
-		my $str = substr($str, $start, $len);
-		push(@captures, $str);
-	}
-
-	return @captures;
+    return @ret;
 }
 
 sub colorize_matches {
