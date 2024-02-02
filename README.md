@@ -47,6 +47,9 @@ they use advanced `--filter COLOR,PATTERN` style syntax. Where the COLOR is the
 first column, one or more tabs, and then PATTERN.
 
 ### Notes:
+Highlight requires a 256 color capable terminal. If you're still running a 16
+color terminal this will probably look pretty ugly.
+
 This package also includes a bonus script `bleach_text` to strip out
 ANSI color escape sequences.
 
