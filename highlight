@@ -25,6 +25,7 @@ my $debug            = 0;
 my @raw_filters      = ();
 my $force            = 0;
 my $full_match       = 0;
+my $bold             = 0;
 my $file;
 my $color;
 
@@ -39,6 +40,7 @@ GetOptions(
 	# Highlight full matches not just captured parens
 	"full_matches"     => \$full_match,
 	"file=s"           => \$file,
+	"bold"             => \$bold,
 ) or die "unable to parse options, stopped";
 
 if ($case_sensitive) {
@@ -50,7 +52,13 @@ if ($case_sensitive) {
 my @def_colors    = (33,11,9,47,214,99,15,51,198,94); # Blue, Yellow, Red, Green, Orange, Purple, White, LightBlue, Magenta, Brown
 my $def_color_num = 0;
 my $reset         = color('reset');
-my $bold          = color('bold');
+
+# If the user requests bold for colors we output in bold
+if ($bold) {
+	$bold = color('bold');
+} else {
+	$bold = "";
+}
 
 # Respect manual color overrides in ENV
 if ($ENV{"HIGHLIGHT_COLORS"}) {
