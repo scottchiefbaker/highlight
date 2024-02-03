@@ -18,17 +18,20 @@ This program takes text via STDIN and outputs it with the given
 [patterns](https://perldoc.perl.org/perlre.html) highlighted with various colors.
 If no color option is specified, it defaults to a pre-selected array of colors.
 
-If you filter contains capturing parens, *only* the captured text will be
+Example: `cat logfile.txt | highlight --filter 'green,pass' --filter 'red,fail'`
+
+If your filter contains capturing parens, *only* the captured text will be
 highlighted. If this is not the behavior you want you can use non-capturing
 parens, or use the `--full_matches` param.
 
-Passing `--case_sensitive` will enable case-sensitive matching. Otherwise
-case-insentive matching is used, unless there is a capital letter in your filter,
-in which case case-senstive is used (Vim smartcase).
+Highlight uses Vim style smartcase matching. If your filter contains a capital
+letter then matches are case-**sensitive**, otherwise they are case-insensitive.
+Options for `--case_sensitive` and `--case_insensitive` are available as overrides.
 
-If your pattern begins with a dash, you can pass a `--` argument
-after any options and before your pattern to distinguish it from an
-option.
+If your match pattern begins with a dash, you will have to use the `--filter` syntax
+so highlight can differtiate between a filter and a param.
+
+Example: `cat README.md | highlight --filter 'green,--'`
 
 ### Params:
 
@@ -42,7 +45,7 @@ option.
 | `--file`                 | read patterns from a file                                |
 | `--help`                 | show command usage                                       |
 
-**Note:** Patterns read from a file are one per line. If patterns tab are separated,
+**Note:** Patterns read from a file are one per line. If lines are tab separated,
 they use advanced `--filter COLOR,PATTERN` style syntax. Where the COLOR is the
 first column, one or more tabs, and then PATTERN.
 
@@ -50,12 +53,11 @@ first column, one or more tabs, and then PATTERN.
 Highlight requires a 256 color capable terminal. If you're still running a 16
 color terminal this will probably look pretty ugly.
 
-This package also includes a bonus script `bleach_text` to strip out
-ANSI color escape sequences.
-
 ### Colors:
 
-Filters can be assigned a **specific** color by using the ANSI number available in the `term-colors.pl` script.
+Filters can be assigned a **specific** color by using the ANSI numbers available
+in the `term-colors.pl` script. Alternately some colors can be defined as a
+string shortcut: red, blue, green, yellow, orange, purple, white, and black
 
 ### Examples:
 ```
