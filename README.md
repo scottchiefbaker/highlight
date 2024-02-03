@@ -1,8 +1,8 @@
 # Highlight
 
-Written by Dave Goodell <davidjgoodell@gmail.com>
+Written by Dave Goodell
 
-Forked and modified by Scott Baker <scott.baker@gmail.com>
+Forked and modified by Scott Baker
 
 ---
 
