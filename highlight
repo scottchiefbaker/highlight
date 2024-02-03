@@ -30,17 +30,17 @@ my $file;
 my $color;
 
 GetOptions(
-	"case_sensitive"   => \$case_sensitive,
-	"case_insensitive" => \$case_insensitive,
-	"help"             => \&print_usage_and_exit,
-	"filter|f=s"       => \@raw_filters,
-	"debug"            => \$debug,
+	"case_sensitive"     => \$case_sensitive,
+	"case_insensitive|i" => \$case_insensitive,
+	"help"               => \&print_usage_and_exit,
+	"filter|f=s"         => \@raw_filters,
+	"debug"              => \$debug,
 	# Force colorization on at *ALL* times
-	"force"            => \$force,
+	"force"              => \$force,
 	# Highlight full matches not just captured parens
-	"full_matches"     => \$full_match,
-	"file=s"           => \$file,
-	"bold"             => \$bold,
+	"full_matches"       => \$full_match,
+	"file=s"             => \$file,
+	"bold"               => \$bold,
 ) or die "unable to parse options, stopped";
 
 if ($case_sensitive) {

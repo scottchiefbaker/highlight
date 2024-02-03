@@ -32,15 +32,15 @@ option.
 
 ### Params:
 
-| Option               | Description                                              |
-| -------------------- | -------------------------------------------------------- |
-| `--case_insensitive` | pattern matching is **not** case sensitive (default)     |
-| `--case_sensitive`   | pattern matching is case sensitive                       |
-| `--filter`           | a color and pattern pair (separated by a comma)          |
-| `--force`            | force coloring on, even when not connected to a terminal |
-| `--full_matches`     | colorize entire match, not just captured parens          |
-| `--file`             | read patterns from a file                                |
-| `--help`             | show command usage                                       |
+| Option                   | Description                                              |
+| ------------------------ | -------------------------------------------------------- |
+| `--case_insensitive` `-i`| pattern matching is **not** case sensitive (default)     |
+| `--case_sensitive`       | pattern matching is case sensitive                       |
+| `--filter` `-f`          | a color and pattern pair (separated by a comma)          |
+| `--force`                | force coloring on, even when not connected to a terminal |
+| `--full_matches`         | colorize entire match, not just captured parens          |
+| `--file`                 | read patterns from a file                                |
+| `--help`                 | show command usage                                       |
 
 **Note:** Patterns read from a file are one per line. If patterns tab are separated,
 they use advanced `--filter COLOR,PATTERN` style syntax. Where the COLOR is the
