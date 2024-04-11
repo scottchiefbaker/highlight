@@ -106,6 +106,8 @@ foreach my $filter (@ARGV) {
 	push(@filters,$filter);
 }
 
+# If we're in debug mode we print out the words and colors before we do
+# any highlighting
 if ($debug) {
 	my $length = longest_word(@filters);
 	$length   += 2; # We add two because we '' the filter below and it makes the string longer
@@ -126,6 +128,11 @@ if (!@ARGV && !@filters) {
 	print_usage();
 	die("At least one pattern required to match\n");
 }
+
+#############################################################################
+# Everything above is setting up the filters and the appropriate colors
+# Everything below is actually doing to search/replace and coloring
+#############################################################################
 
 # Go line by line and apply each filter to it
 while (my $line = <STDIN>) {
@@ -197,6 +204,7 @@ sub print_usage_and_exit {
 	exit 0;
 }
 
+# String is 100% numeric
 sub is_numeric {
 	my $f = shift();
 	if ($f =~ /^(\d+\.?\d*|\.\d+)$/) { return 1; }
@@ -204,6 +212,7 @@ sub is_numeric {
 	return 0;
 }
 
+# String contains ANY uppercase
 sub has_uppercase {
 	my $str = shift();
 	my $ret = 0;
@@ -215,6 +224,7 @@ sub has_uppercase {
 	return $ret;
 }
 
+# Find the length of the longest word in an array
 sub longest_word {
 	my @arr     = @_;
 	my $longest = 0;
