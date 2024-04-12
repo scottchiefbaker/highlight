@@ -41,10 +41,10 @@ Example: `cat README.md | highlight --filter 'green,--'`
 | `--bold`                 | output matched patterns using bold font                  |
 | `--case_insensitive` `-i`| pattern matching is **not** case sensitive (default)     |
 | `--case_sensitive`       | pattern matching is case sensitive                       |
+| `--file`                 | read patterns from a file                                |
 | `--filter` `-f`          | a color and pattern pair (separated by a comma)          |
 | `--force`                | force coloring on, even when not connected to a terminal |
 | `--full_matches`         | colorize entire match, not just captured parens          |
-| `--file`                 | read patterns from a file                                |
 | `--help`                 | show command usage                                       |
 
 **Note:** Patterns read from a file are one per line. If lines are tab separated,
