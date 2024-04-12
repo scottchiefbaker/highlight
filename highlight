@@ -368,6 +368,11 @@ sub read_patterns_from_file {
 	@lines = reverse(@lines);
 
 	foreach my $line (@lines) {
+		# If the line is a comment, skip it
+		if ($line =~ /^#/) {
+			continue;
+		}
+
 		my @parts = split(/\t+/, $line, 2);
 
 		my $key = $parts[0];
