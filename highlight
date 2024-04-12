@@ -16,7 +16,7 @@ use Getopt::Long;
 # Disable output buffering
 local $| = 1;
 
-my $VERSION = "1.7";
+my $VERSION = "1.8";
 
 my $ignore_case      = 1;
 my $case_sensitive   = undef;
