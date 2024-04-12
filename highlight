@@ -375,17 +375,30 @@ sub read_patterns_from_file {
 
 		my @parts = split(/\t+/, $line, 2);
 
-		my $key = $parts[0];
-		my $val = $parts[1];
+		# Color is the first column, and pattern is the second
+		my $color   = $parts[0] || "";
+		my $pattern = $parts[1] || "";
+
+		# If there is not a pattern it's a one column entry which is only pattern
+		if (!$pattern) {
+			$pattern = $color;
+		}
 
 		# Advanced filter: color => pattern
-		if ($key && $val) {
-			#print "Adding1: $key/$val\n";
-			unshift(@$adv_filters, "$key,$val");
+		# We use len here because "0" may be a valid color
+		if ((length($color) > 0) && $pattern) {
+			if ($debug) {
+				print "Adding advanced: $color => $pattern\n";
+			}
+
+			unshift(@$adv_filters, "$color,$pattern");
 		# Simple filter: pattern
-		} elsif ($key) {
-			#print "Adding2: $key\n";
-			unshift(@$simple_filters, $key);
+		} elsif ($pattern) {
+			if ($debug) {
+				print "Adding regular: $pattern\n";
+			}
+
+			unshift(@$simple_filters, $pattern);
 		}
 	}
 
