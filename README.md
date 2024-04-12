@@ -38,6 +38,7 @@ Example: `cat README.md | highlight --filter 'green,--'`
 
 | Option                   | Description                                              |
 | ------------------------ | -------------------------------------------------------- |
+| `--bold`                 | output matched patterns using bold font                  |
 | `--case_insensitive` `-i`| pattern matching is **not** case sensitive (default)     |
 | `--case_sensitive`       | pattern matching is case sensitive                       |
 | `--filter` `-f`          | a color and pattern pair (separated by a comma)          |
