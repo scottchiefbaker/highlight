@@ -373,11 +373,11 @@ sub read_patterns_from_file {
 		my $key = $parts[0];
 		my $val = $parts[1];
 
-		# Advanced filter
+		# Advanced filter: color => pattern
 		if ($key && $val) {
 			#print "Adding1: $key/$val\n";
 			unshift(@$adv_filters, "$key,$val");
-		# Simple filter
+		# Simple filter: pattern
 		} elsif ($key) {
 			#print "Adding2: $key\n";
 			unshift(@$simple_filters, $key);
