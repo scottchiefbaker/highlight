@@ -383,6 +383,7 @@ sub read_patterns_from_file {
 		# If there is not a pattern it's a one column entry which is only pattern
 		if (!$pattern) {
 			$pattern = $color;
+			$color   = "";
 		}
 
 		# Advanced filter: color => pattern
