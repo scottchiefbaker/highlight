@@ -1,8 +1,8 @@
 # Highlight
 
-Written by Dave Goodell
+Originally written by Dave Goodell
 
-Forked and modified by Scott Baker
+Forked and improved by Scott Baker
 
 ---
 
@@ -15,8 +15,9 @@ highlight [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
 ```
 
 This program takes text via STDIN and outputs it with the given
-[patterns](https://perldoc.perl.org/perlre.html) highlighted with various colors.
-If no color option is specified, it defaults to a pre-selected array of colors.
+[regex](https://perldoc.perl.org/perlre.html) patterns highlighted with using color.
+If no color option is specified, highlight will default to a pre-selected array
+of colors.
 
 Example: `cat logfile.txt | highlight --filter 'green,pass' --filter 'red,fail'`
 
@@ -55,9 +56,9 @@ color terminal this will probably look pretty ugly.
 
 ### Colors:
 
-Filters can be assigned a **specific** color by using the ANSI numbers available
-in the `term-colors.pl` script. Alternately some colors can be defined as a
-string shortcut: red, blue, green, yellow, orange, purple, white, and black
+Filters use the color of the ANSI numbers available in the `term-colors.pl`
+script in the `extras/` directory. Alternately some colors can be defined as a
+string shortcut: red, blue, green, yellow, orange, purple, white, and black.
 
 ### Examples:
 ```
