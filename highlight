@@ -175,13 +175,14 @@ Usage: $0 <PATTERN0> [PATTERN1...]
   or
 Usage: $0 [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
 $color
---case_insensitive  pattern matching is not case sensitive (default)
---case_sensitive    pattern matching is case sensitive
---filter            a color and pattern pair (separated by a comma)
---force             force coloring on, even when not connected to a terminal
---full_matches      colorize entire match, not just captured parens
---help              show command usage
---file              read patterns from a file
+--bold                  output matched patterns using bold font
+--case_insensitive / -i pattern matching is not case sensitive (default)
+--case_sensitive        pattern matching is case sensitive
+--file                  read patterns from a file
+--filter / -f           a color and pattern pair (separated by a comma)
+--force                 force coloring on, even when not connected to a terminal
+--full_matches          colorize entire match, not just captured parens
+--help                  show command usage
 $reset
 This program takes text via standard input and outputs it with the given
 perlre(1) pattern(s) highlighted with various colors.  If no color option
