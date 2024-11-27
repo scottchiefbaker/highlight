@@ -15,7 +15,7 @@ highlight [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
 ```
 
 This program takes text via STDIN and outputs it with the given
-[regex](https://perldoc.perl.org/perlre.html) patterns highlighted with using color.
+[regex](https://perldoc.perl.org/perlre.html) patterns highlighted in color.
 If no color option is specified, highlight will default to a pre-selected array
 of colors.
 
