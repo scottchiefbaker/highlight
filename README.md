@@ -1,4 +1,4 @@
-# Highlight
+# 🎨 Highlight
 
 Originally written by Dave Goodell
 
@@ -6,7 +6,7 @@ Forked and improved by Scott Baker
 
 ---
 
-### Usage:
+### ✨ Usage:
 
 ```
 highlight <PATTERN0> [PATTERN1...]
@@ -34,7 +34,7 @@ so highlight can differtiate between a filter and a param.
 
 Example: `cat README.md | highlight --filter 'green,--'`
 
-### Params:
+### 🔡 Params:
 
 | Option                   | Description                                              |
 | ------------------------ | -------------------------------------------------------- |
@@ -51,17 +51,17 @@ Example: `cat README.md | highlight --filter 'green,--'`
 they use advanced `--filter COLOR,PATTERN` style syntax. Where the COLOR is the
 first column, one or more tabs, and then PATTERN.
 
-### Notes:
+### 🗒️ Notes:
 Highlight requires a 256 color capable terminal. If you're still running a 16
 color terminal this will probably look pretty ugly.
 
-### Colors:
+### 🌈 Colors:
 
 Filters use the color of the ANSI numbers available in the `term-colors.pl`
 script in the `extras/` directory. Alternately some colors can be defined as a
 string shortcut: red, blue, green, yellow, orange, purple, white, and black.
 
-### Examples:
+### 🧪 Examples:
 ```
 cat README.md | highlight colors? by 'pattern[\ds]?' text program with '\bhighlight\b'
 
