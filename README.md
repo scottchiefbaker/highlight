@@ -17,7 +17,7 @@ This program takes text via STDIN and outputs it with the given
 If no specific color option is provided, highlight will default to a
 pre-selected array of colors.
 
-Example: `cat logfile.txt | highlight --filter 'green,pass' --filter 'red,fail'`
+**Example:** `cat logfile.txt | highlight --filter 'green,pass' --filter 'red,fail'`
 
 If your filter contains capturing parens, *only* the captured text will be
 highlighted. If this is not the behavior you want you can use non-capturing
@@ -28,9 +28,9 @@ letter then matches are case-**sensitive**, otherwise they are case-insensitive.
 Options for `--case_sensitive` and `--case_insensitive` are available as overrides.
 
 If your match pattern begins with a dash, you will have to use the `--filter` syntax
-so highlight can differtiate between a filter and a param.
+so highlight can differentiate between a filter and a param.
 
-Example: `cat README.md | highlight --filter 'green,--'`
+**Example:** `cat README.md | highlight --filter 'green,--'`
 
 ### 🔡 Params:
 
