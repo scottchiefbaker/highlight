@@ -1,8 +1,6 @@
 # 🎨 Highlight
 
-Originally written by Dave Goodell
-
-Forked and improved by Scott Baker
+Highlight and colorize text patterns in your terminal for easier readability.
 
 ---
 
@@ -69,3 +67,10 @@ cat nagios.log | highlight --filter '11,\bWARNING\b' --filter '82,\bOK\b' --filt
 
 cat messages.log | highlight --file /tmp/patterns.txt
 ```
+
+### 👨 Team
+
+| Username         | Role            |
+| ---------------- | --------------- |
+| @scottchiefbaker | Lead programmer |
+| @goodell         | Original author |
