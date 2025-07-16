@@ -14,7 +14,7 @@ use v5.16;
 use Getopt::Long;
 
 # Disable output buffering
-local $| = 1;
+*STDOUT->autoflush;
 
 my $VERSION = "1.8";
 
