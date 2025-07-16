@@ -63,7 +63,7 @@ string shortcut: red, blue, green, yellow, orange, purple, white, and black.
 
 ### 🧪 Examples:
 ```
-cat README.md | highlight colors? by 'pattern[\ds]?' text program with '\bhighlight\b'
+cat README.md | highlight colors? by 'pattern[\ds]?' filter case with '\bhighlight\b'
 
 cat nagios.log | highlight --filter '11,\bWARNING\b' --filter '82,\bOK\b' --filter '196,\bCRITICAL\b'
 
