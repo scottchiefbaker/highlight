@@ -185,13 +185,11 @@ $color
 --help                  show command usage
 $reset
 This program takes text via standard input and outputs it with the given
-perlre(1) pattern(s) highlighted with various colors.  If no color option
-is specified, it defaults to a pre-selected array of colors. This program
-is similar to "grep --color PATTERN" except both matching and non-matching
-lines are printed.
+regexp patterns highlighted in color.  If no color option
+is specified, it defaults to a pre-selected array of colors.
 
-Passing --case_sensitive will enable case-sensitive matching. Otherwise
-Vim style smartcase matching will be implemented.
+Using --case_sensitive will enable case-sensitive matching. Otherwise
+Vim style smartcase matching will be utilized.
 
 If your pattern begins with a dash ('-'), you can pass a '--' argument
 after any options and before your pattern to distinguish it from an
