@@ -49,6 +49,10 @@ so highlight can differentiate between a filter and a param.
 they use advanced `--filter COLOR,PATTERN` style syntax. Where the COLOR is the
 first column, one or more tabs, and then PATTERN.
 
+### 🖼️ Screenshot:
+
+<img width="1058" height="772" alt="Highlight screenshot" src="https://github.com/user-attachments/assets/4c169c5a-0dd2-4e74-8de3-0484d1f68a9b" />
+
 ### 🗒️ Notes:
 Highlight requires a 256 color capable terminal. If you're still running a 16
 color terminal this will probably look pretty ugly.
