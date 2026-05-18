@@ -291,8 +291,8 @@ sub colorize_matches {
 sub color {
 	my ($str, $txt) = @_;
 
-	if (-t STDOUT == 0 || $ENV{NO_COLOR}) { return $txt // ""; } # No interactive terminal
-	if (!length($str) || $str eq 'reset') { return "\e[0m";    } # No string = RESET
+	if (!$force && (-t STDOUT == 0 || $ENV{NO_COLOR})) { return $txt // ""; } # No interactive terminal
+	if (!length($str) || $str eq 'reset')              { return "\e[0m";    } # No string = RESET
 
 	# Some predefined colors/commands
 	my %color_map = qw(red 160 blue 27 green 34 yellow 226 orange 214 purple 93 white 15 black 0);
