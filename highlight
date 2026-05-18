@@ -30,7 +30,7 @@ my $file;
 my $color;
 
 GetOptions(
-	"case_sensitive"     => \$case_sensitive,
+	"case_sensitive|s"   => \$case_sensitive,
 	"case_insensitive|i" => \$case_insensitive,
 	"help"               => \&print_usage_and_exit,
 	"filter|f=s"         => \@raw_filters,
@@ -177,7 +177,7 @@ Usage: $0 [--filter COLOR,PATTERN] [--filter COLOR,PATTERN] ...
 $color
 --bold                  output matched patterns using bold font
 --case_insensitive, -i  pattern matching is not case sensitive (default)
---case_sensitive        pattern matching is case sensitive
+--case_sensitive, -s    pattern matching is case sensitive
 --file                  read patterns from a file
 --filter, -f            a color and pattern pair (separated by a comma)
 --force                 force coloring on, even when not connected to a terminal

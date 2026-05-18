@@ -38,7 +38,7 @@ so highlight can differentiate between a filter and a param.
 | ------------------------ | -------------------------------------------------------- |
 | `--bold`                 | output matched patterns using bold font                  |
 | `--case_insensitive` `-i`| pattern matching is **not** case sensitive (default)     |
-| `--case_sensitive`       | pattern matching is case sensitive                       |
+| `--case_sensitive` `-s`  | pattern matching is case sensitive                       |
 | `--file`                 | read patterns from a file                                |
 | `--filter` `-f`          | a color and pattern pair (separated by a comma)          |
 | `--force`                | force coloring on, even when not connected to a terminal |
