@@ -16,7 +16,7 @@ use Getopt::Long;
 # Disable output buffering
 *STDOUT->autoflush;
 
-my $VERSION = "1.8";
+my $VERSION = "v1.8.2";
 
 my $ignore_case      = 1;
 my $case_sensitive   = undef;
