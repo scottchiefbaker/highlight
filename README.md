@@ -37,7 +37,7 @@ so highlight can differentiate between a filter and a param.
 | Option                   | Description                                              |
 | ------------------------ | -------------------------------------------------------- |
 | `--bold`                 | output matched patterns using bold font                  |
-| `--case_insensitive` `-i`| pattern matching is **not** case sensitive (default)     |
+| `--case_insensitive` `-i`| pattern matching is **not** case sensitive               |
 | `--case_sensitive` `-s`  | pattern matching is case sensitive                       |
 | `--file`                 | read patterns from a file                                |
 | `--filter` `-f`          | a color and pattern pair (separated by a comma)          |
@@ -62,6 +62,10 @@ color terminal this will probably look pretty ugly.
 Filters use the color of the ANSI numbers available in the `term-colors.pl`
 script in the `extras/` directory. Alternately some colors can be defined as a
 string shortcut: red, blue, green, yellow, orange, purple, white, and black.
+
+Color values can also use `_bold` (e.g., `165_bold`) or `on_COLOR` background
+suffixes (e.g., `10_on_140`, `white_on_blue`). True color hex values (`#RRGGBB`)
+are supported as well.
 
 ### 🧪 Examples:
 ```
