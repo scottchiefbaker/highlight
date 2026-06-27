@@ -57,6 +57,9 @@ first column, one or more tabs, and then PATTERN.
 Highlight requires a 256 color capable terminal. If you're still running a 16
 color terminal this will probably look pretty ugly.
 
+Highlight respects the `NO_COLOR` environment variable, as well as disabling color
+when piping to a file or another command.
+
 ### 🌈 Colors:
 
 Filters use the color of the ANSI numbers available in the `term-colors.pl`
