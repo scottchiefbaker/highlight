@@ -5,6 +5,7 @@ use warnings;
 use v5.16;
 use Test::More;
 use File::Basename;
+use File::Temp;
 
 my $dir   = dirname($0);
 my $HL    = "$dir/../highlight";
@@ -87,6 +88,145 @@ is(
     "bold"
 );
 
+###############################################################################
+# --file option
+###############################################################################
+
+{
+	my $tmp = File::Temp->new(UNLINK => 1);
+	print $tmp "red\thello";
+	close $tmp;
+	is(
+		bleached_output("echo 'hello world' | $HL --force --file '$tmp'"),
+		'[COLOR160]hello[RESET] world',
+		"--file with tab-separated pattern"
+	);
+}
+
+{
+	my $tmp = File::Temp->new(UNLINK => 1);
+	print $tmp "hello";
+	close $tmp;
+	is(
+		bleached_output("echo 'hello world' | $HL --force --file '$tmp'"),
+		'[COLOR033]hello[RESET] world',
+		"--file with plain pattern"
+	);
+}
+
+{
+	my $tmp = File::Temp->new(UNLINK => 1);
+	print $tmp "# comment\nred\thello";
+	close $tmp;
+	is(
+		bleached_output("echo 'hello world' | $HL --force --file '$tmp'"),
+		'[COLOR160]hello[RESET] world',
+		"--file ignores comment lines"
+	);
+}
+
+###############################################################################
+# HIGHLIGHT_COLORS env var
+###############################################################################
+
+is(
+	bleached_output("echo 'cat dog' | HIGHLIGHT_COLORS=160,27 $HL --force cat dog"),
+	'[COLOR160]cat[RESET] [COLOR027]dog[RESET]',
+	"HIGHLIGHT_COLORS overrides default color cycle"
+);
+
+###############################################################################
+# NO_COLOR env var
+###############################################################################
+
+is(
+	bleached_output("echo 'hello world' | NO_COLOR=1 $HL hello"),
+	'hello world',
+	"NO_COLOR disables color without --force"
+);
+
+is(
+	bleached_output("echo 'hello world' | NO_COLOR=1 $HL --force hello"),
+	'[COLOR033]hello[RESET] world',
+	"--force takes precedence over NO_COLOR"
+);
+
+###############################################################################
+# Multi-line input
+###############################################################################
+
+is(
+	bleached_output("printf 'cat\\ndog\\n' | $HL --force --filter 33,cat --filter 11,dog"),
+	"[COLOR033]cat[RESET]\n[COLOR011]dog[RESET]",
+	"multi-line input with two filters"
+);
+
+###############################################################################
+# Multiple matches per line
+###############################################################################
+
+is(
+	bleached_output("echo 'cat cat cat' | $HL --force cat"),
+	'[COLOR033]cat[RESET] [COLOR033]cat[RESET] [COLOR033]cat[RESET]',
+	"multiple matches on one line"
+);
+
+###############################################################################
+# Dash-leading patterns
+###############################################################################
+
+is(
+	bleached_output("echo '-foo bar' | $HL --force --filter '196,-foo'"),
+	'[COLOR196]-foo[RESET] bar',
+	"dash-leading pattern via --filter"
+);
+
+###############################################################################
+# _bold color suffix
+###############################################################################
+
+is(
+	bleached_output("echo 'word' | $HL --force --filter '165_bold,word'"),
+	'[COLOR165][BOLD]word[RESET]',
+	"_bold color suffix combines color and bold in one code"
+);
+
+###############################################################################
+# on_ background suffix
+###############################################################################
+
+is(
+	bleached_output("echo 'word' | $HL --force --filter '10_on_140,word'"),
+	'[COLOR010][BACKG140]word[RESET]',
+	"on_ background suffix sets foreground and background"
+);
+
+###############################################################################
+# Bareword patterns
+###############################################################################
+
+is(
+	bleached_output("echo 'hello' | $HL --force hello"),
+	'[COLOR033]hello[RESET]',
+	"bareword pattern with default color"
+);
+
+is(
+	bleached_output("echo 'hello world' | $HL --force hello world"),
+	'[COLOR033]hello[RESET] [COLOR011]world[RESET]',
+	"multiple bareword patterns cycle through default colors"
+);
+
+###############################################################################
+# Color cycling (more patterns than default colors)
+###############################################################################
+
+is(
+	bleached_output("echo 'a b c d e f g h i j k' | $HL --force a b c d e f g h i j k"),
+	'[COLOR033]a[RESET] [COLOR011]b[RESET] [COLOR009]c[RESET] [COLOR047]d[RESET] [COLOR214]e[RESET] [COLOR099]f[RESET] [COLOR015]g[RESET] [COLOR051]h[RESET] [COLOR198]i[RESET] [COLOR094]j[RESET] [COLOR033]k[RESET]',
+	"color cycling wraps after 10 default colors (k gets color index 0)"
+);
+
 done_testing();
 
 exit 0;
@@ -101,10 +241,16 @@ sub highlight_output {
 	my $opt_str = join(' ', @$opts);
 
 	my $cmd   = "echo '$text' | $HL --force $opt_str $filter_str";
-	my $after = `$cmd`;
-	$after    = trim($after);
+	return bleached_output($cmd);
+}
+
+sub bleached_output {
+	my $cmd = shift;
 
 	diag("CMD: $cmd") if $debug;
+
+	my $after = `$cmd`;
+	$after    = trim($after);
 
 	my $human = output_human($after);
 	return bleach_text($human);
