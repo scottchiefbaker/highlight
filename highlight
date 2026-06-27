@@ -149,10 +149,14 @@ while (my $line = <STDIN>) {
 		}
 
 		# Search for the filter and wrap it in color
+		# Prepend an ANSI-skip branch so filters never match digits inside
+		# existing escape sequences (e.g. filter "22" hitting "228" in \e[38;5;228m).
+		# (*SKIP) prevents backtracking into the ANSI sequence, (*FAIL) rejects the
+		# match, and | makes the filter pattern the fallback on real text.
 		if ($ignore_case) {
-			$filter = qr/$filter/i;
+			$filter = qr/\e\[[\d;]*m(*SKIP)(*FAIL)|$filter/i;
 		} else {
-			$filter = qr/$filter/;
+			$filter = qr/\e\[[\d;]*m(*SKIP)(*FAIL)|$filter/;
 		}
 
 		$line = colorize_line($line, $filter, $color_str);
