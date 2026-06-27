@@ -372,7 +372,7 @@ sub read_patterns_from_file {
 	foreach my $line (@lines) {
 		# If the line is a comment, skip it
 		if ($line =~ /^#/) {
-			continue;
+			next;
 		}
 
 		my @parts = split(/\t+/, $line, 2);
