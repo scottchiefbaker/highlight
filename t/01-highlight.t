@@ -88,6 +88,10 @@ is(
     "bold"
 );
 
+# \b word boundaries
+is(highlight_output("Bolder", ['\bder\b']), 'Bolder'                 , "\b word boundaries");
+is(highlight_output("Bolder", ['der'])    , 'Bol[COLOR033]der[RESET]', "\b word boundaries");
+
 ###############################################################################
 # --file option
 ###############################################################################
