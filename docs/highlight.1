@@ -1,0 +1,261 @@
+'\" t
+.\"     Title: highlight
+.\"    Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 2026-10-07
+.\"    Manual: highlight Manual
+.\"    Source: highlight v1.8.5
+.\"  Language: English
+.\"
+.TH "HIGHLIGHT" "1" "2026\-10\-07" "highlight v1\&.8\&.5" "highlight Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+highlight \- colorize regexp matches read from standard input
+.SH "SYNOPSIS"
+.sp
+\fBhighlight\fR [\fIOPTIONS\fR] \fIPATTERN0\fR [\fIPATTERN1\fR \&...]
+.sp
+\fBhighlight\fR [\fIOPTIONS\fR] \fB\-\-filter\fR \fICOLOR,PATTERN\fR [\fI\-\-filter\fR \fICOLOR,PATTERN\fR \&...]
+.sp
+\fBhighlight\fR [\fIOPTIONS\fR] \fB\-\-file\fR \fIFILE\fR
+.SH "DESCRIPTION"
+.sp
+\fBhighlight\fR reads text from standard input, one line at a time, and writes it to standard output with every occurrence of the given patterns wrapped in ANSI 256\-color escape sequences\&. Patterns are interpreted as Perl regular expressions\&.
+.sp
+When patterns are given as bare arguments (\fIPATTERN0\fR, \fIPATTERN1\fR, \&...) they are colored using a built\-in cycle of ten default colors, assigned in order\&. When a pattern is supplied with the \fB\-\-filter\fR option, the color may be chosen explicitly by prefixing the pattern with a color specification and a comma (see COLOR SPECIFICATION)\&.
+.sp
+By default matching uses \fBsmartcase\fR: a pattern containing at least one uppercase letter is matched case\-sensitively, while an all\-lowercase pattern is matched case\-insensitively\&. This behavior can be overridden with \fB\-\-case_sensitive\fR or \fB\-\-case_insensitive\fR\&.
+.sp
+If a pattern contains capturing parentheses, only the text captured by the groups is colorized, not the entire match\&. Use \fB\-\-full_matches\fR to colorize the whole match instead\&.
+.sp
+A 256\-color terminal is required for color output\&. When output is not connected to a terminal (for example, in a pipeline or a test harness), colorization is disabled unless \fB\-\-force\fR is given\&.
+.SH "OPTIONS"
+.PP
+\fB\-b\fR, \fB\-\-bold\fR
+.RS 4
+Render the matched patterns in a bold font, in addition to coloring them\&.
+.RE
+.PP
+\fB\-i\fR, \fB\-\-case_insensitive\fR
+.RS 4
+Perform case\-insensitive matching\&. Equivalent to the smartcase behavior for all\-lowercase patterns, applied to every pattern\&.
+.RE
+.PP
+\fB\-s\fR, \fB\-\-case_sensitive\fR
+.RS 4
+Perform case\-sensitive matching for every pattern, disabling smartcase\&.
+.RE
+.PP
+\fB\-f\fR \fICOLOR,PATTERN\fR, \fB\-\-filter\fR \fICOLOR,PATTERN\fR
+.RS 4
+Add a single pattern together with its color\&. The color and the pattern are separated by the first comma\&. This form must be used when a pattern begins with a hyphen, otherwise it would be parsed as an option\&. May be given multiple times\&.
+.RE
+.PP
+\fB\-\-file\fR \fIFILE\fR
+.RS 4
+Read additional patterns from
+\fIFILE\fR, one entry per line\&. Blank lines and lines beginning with
+#
+are ignored\&. A line containing only a pattern uses the next color in the default cycle; a line containing a color specification and a pattern separated by one or more tab characters uses that color\&. This option may be combined with patterns given on the command line\&.
+.RE
+.PP
+\fB\-\-full_matches\fR
+.RS 4
+Colorize the entire match even when the pattern contains capturing parentheses\&. By default only captured groups are colorized\&.
+.RE
+.PP
+\fB\-\-force\fR
+.RS 4
+Force colorization on at all times, even when standard output is not a terminal and even when the
+\fBNO_COLOR\fR
+environment variable is set\&. This is primarily useful in pipelines and tests\&.
+.RE
+.PP
+\fB\-\-debug\fR
+.RS 4
+Print the list of patterns and their assigned colors to standard output before processing input\&.
+.RE
+.PP
+\fB\-\-help\fR
+.RS 4
+Print a short usage message and exit\&.
+.RE
+.SH "COLOR SPECIFICATION"
+.sp
+A color specification is a string describing one or more ANSI attributes\&. The following forms are understood:
+.PP
+Numeric ANSI color
+.RS 4
+Any 256\-color palette index, for example
+33
+or
+214\&.
+.RE
+.PP
+Named color
+.RS 4
+One of
+red
+(160),
+blue
+(27),
+green
+(34),
+yellow
+(226),
+orange
+(214),
+purple
+(93),
+white
+(15), or
+black
+(0)\&.
+.RE
+.PP
+True color
+.RS 4
+A hexadecimal value in the form
+#RRGGBB
+or just
+RRGGBB
+after a
+#, specifying a 24\-bit foreground color\&.
+.RE
+.sp
+Multiple attributes may be chained with underscores (_):
+.PP
+COLOR_bold
+.RS 4
+Combine a color with bold, for example
+165_bold\&.
+.RE
+.PP
+COLOR_on_BACKGROUND
+.RS 4
+Set a foreground and a background color, for example
+10_on_140
+or
+white_on_blue\&. The literal prefix
+on_
+denotes the following color as a background\&.
+.RE
+.sp
+Attribute keywords recognized on their own or when chained include bold (1), italic (3), underline (4), blink (5), and inverse (7)\&. The keyword reset emits an ANSI reset sequence\&.
+.SH "ENVIRONMENT"
+.PP
+\fBHIGHLIGHT_COLORS\fR
+.RS 4
+A comma\-separated list of ANSI color numbers used to replace the built\-in default color cycle\&. For example,
+HIGHLIGHT_COLORS=160,27
+assigns
+160
+to the first bare pattern,
+27
+to the second, and so on\&.
+.RE
+.PP
+\fBNO_COLOR\fR
+.RS 4
+When set to a non\-empty value, disables color output\&. Ignored when
+\fB\-\-force\fR
+is given\&.
+.RE
+.SH "FILES"
+.sp
+No configuration files are read\&.
+.SH "EXAMPLES"
+.sp
+Highlight the word error in a log stream using the default color:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+tail \-f app\&.log | highlight error
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Highlight errors in red and warnings in yellow, case\-insensitively:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+highlight \-\-case_insensitive \-\-filter red,error \-\-filter yellow,warning
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Colorize only the captured user name in a log line:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+tail \-f auth\&.log | highlight \*(Aquser: (\ew+)\*(Aq
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Highlight a pattern that begins with a hyphen:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+highlight \-\-filter \*(Aq196,\-v\*(Aq
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Use a pattern file containing tab\-separated color and pattern entries:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+highlight \-\-file patterns\&.txt
+.fi
+.if n \{\
+.RE
+.\}
+.SH "EXIT STATUS"
+.PP
+\fB0\fR
+.RS 4
+Success, or
+\fB\-\-help\fR
+was requested\&.
+.RE
+.PP
+\fB255\fR
+.RS 4
+An invalid option was supplied, or no patterns were supplied\&. A usage message is printed before exiting\&.
+.RE
+.SH "SEE ALSO"
+.sp
+\fBgrep\fR(1), \fBperlre\fR(1)

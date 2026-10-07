@@ -1,0 +1,165 @@
+= highlight(1)
+:doctype: manpage
+:manmanual: highlight Manual
+:mansource: highlight
+:revnumber: v1.8.5
+:revdate: 2026-10-07
+
+== NAME
+
+highlight - colorize regexp matches read from standard input
+
+== SYNOPSIS
+
+*highlight* [_OPTIONS_] _PATTERN0_ [_PATTERN1_ ...]
+
+*highlight* [_OPTIONS_] *--filter* _COLOR,PATTERN_ [_--filter_ _COLOR,PATTERN_ ...]
+
+*highlight* [_OPTIONS_] *--file* _FILE_
+
+== DESCRIPTION
+
+*highlight* reads text from standard input, one line at a time, and writes
+it to standard output with every occurrence of the given patterns wrapped in
+ANSI 256-color escape sequences. Patterns are interpreted as Perl regular
+expressions.
+
+When patterns are given as bare arguments (_PATTERN0_, _PATTERN1_, ...) they are
+colored using a built-in cycle of ten default colors, assigned in order. When a
+pattern is supplied with the *--filter* option, the color may be chosen
+explicitly by prefixing the pattern with a color specification and a comma
+(see <<_color_specification,COLOR SPECIFICATION>>).
+
+By default matching uses *smartcase*: a pattern containing at least one uppercase
+letter is matched case-sensitively, while an all-lowercase pattern is matched
+case-insensitively. This behavior can be overridden with *--case_sensitive* or
+*--case_insensitive*.
+
+If a pattern contains capturing parentheses, only the text captured by the groups
+is colorized, not the entire match. Use *--full_matches* to colorize the whole
+match instead.
+
+A 256-color terminal is required for color output. When output is not connected
+to a terminal (for example, in a pipeline or a test harness), colorization is
+disabled unless *--force* is given.
+
+== OPTIONS
+
+*-b*, *--bold*::
+    Render the matched patterns in a bold font, in addition to coloring them.
+
+*-i*, *--case_insensitive*::
+    Perform case-insensitive matching. Equivalent to the smartcase behavior for
+    all-lowercase patterns, applied to every pattern.
+
+*-s*, *--case_sensitive*::
+    Perform case-sensitive matching for every pattern, disabling smartcase.
+
+*-f* _COLOR,PATTERN_, *--filter* _COLOR,PATTERN_::
+    Add a single pattern together with its color. The color and the pattern are
+    separated by the first comma. This form must be used when a pattern begins
+    with a hyphen, otherwise it would be parsed as an option. May be given
+    multiple times.
+
+*--file* _FILE_::
+    Read additional patterns from _FILE_, one entry per line. Blank lines and
+    lines beginning with `#` are ignored. A line containing only a pattern uses
+    the next color in the default cycle; a line containing a color specification
+    and a pattern separated by one or more tab characters uses that color. This
+    option may be combined with patterns given on the command line.
+
+*--full_matches*::
+    Colorize the entire match even when the pattern contains capturing
+    parentheses. By default only captured groups are colorized.
+
+*--force*::
+    Force colorization on at all times, even when standard output is not a
+    terminal and even when the *NO_COLOR* environment variable is set. This is
+    primarily useful in pipelines and tests.
+
+*--debug*::
+    Print the list of patterns and their assigned colors to standard output
+    before processing input.
+
+*--help*::
+    Print a short usage message and exit.
+
+== COLOR SPECIFICATION
+
+A color specification is a string describing one or more ANSI attributes. The
+following forms are understood:
+
+Numeric ANSI color::
+    Any 256-color palette index, for example `33` or `214`.
+
+Named color::
+    One of `red` (160), `blue` (27), `green` (34), `yellow` (226), `orange`
+    (214), `purple` (93), `white` (15), or `black` (0).
+
+True color::
+    A hexadecimal value in the form `#RRGGBB` or just `RRGGBB` after a `#`,
+    specifying a 24-bit foreground color.
+
+Multiple attributes may be chained with underscores (`_`):
+
+`COLOR_bold`::
+    Combine a color with bold, for example `165_bold`.
+
+`COLOR_on_BACKGROUND`::
+    Set a foreground and a background color, for example `10_on_140` or
+    `white_on_blue`. The literal prefix `on_` denotes the following color as a
+    background.
+
+Attribute keywords recognized on their own or when chained include `bold` (1),
+`italic` (3), `underline` (4), `blink` (5), and `inverse` (7). The keyword
+`reset` emits an ANSI reset sequence.
+
+== ENVIRONMENT
+
+*HIGHLIGHT_COLORS*::
+    A comma-separated list of ANSI color numbers used to replace the built-in
+    default color cycle. For example, `HIGHLIGHT_COLORS=160,27` assigns `160` to
+    the first bare pattern, `27` to the second, and so on.
+
+*NO_COLOR*::
+    When set to a non-empty value, disables color output. Ignored when
+    *--force* is given.
+
+== FILES
+
+No configuration files are read.
+
+== EXAMPLES
+
+Highlight the word `error` in a log stream using the default color:
+
+    tail -f app.log | highlight error
+
+Highlight errors in red and warnings in yellow, case-insensitively:
+
+    highlight --case_insensitive --filter red,error --filter yellow,warning
+
+Colorize only the captured user name in a log line:
+
+    tail -f auth.log | highlight 'user: (\w+)'
+
+Highlight a pattern that begins with a hyphen:
+
+    highlight --filter '196,-v'
+
+Use a pattern file containing tab-separated color and pattern entries:
+
+    highlight --file patterns.txt
+
+== EXIT STATUS
+
+*0*::
+    Success, or *--help* was requested.
+
+*255*::
+    An invalid option was supplied, or no patterns were supplied. A usage
+    message is printed before exiting.
+
+== SEE ALSO
+
+*grep*(1), *perlre*(1)
