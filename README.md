@@ -53,13 +53,6 @@ first column, one or more tabs, and then PATTERN.
 
 <img width="1058" height="772" alt="Highlight screenshot" src="https://github.com/user-attachments/assets/4c169c5a-0dd2-4e74-8de3-0484d1f68a9b" />
 
-### 🗒️ Notes:
-Highlight requires a 256 color capable terminal. If you're still running a 16
-color terminal this will probably look pretty ugly.
-
-Highlight respects the `NO_COLOR` environment variable, as well as disabling color
-when piping to a file or another command.
-
 ### 🌈 Colors:
 
 Filters use the color of the ANSI numbers available in the `term-colors.pl`
@@ -85,3 +78,10 @@ cat messages.log | highlight --file /tmp/patterns.txt
 | ---------------- | --------------- |
 | @scottchiefbaker | Lead programmer |
 | @goodell         | Original author |
+
+### 🗒️ Notes:
+Highlight requires a 256 color capable terminal. If you're still running a 16
+color terminal this will probably look pretty ugly.
+
+Highlight respects the `NO_COLOR` environment variable, as well as disabling color
+when piping to a file or another command.
